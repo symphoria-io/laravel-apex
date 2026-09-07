@@ -8,6 +8,10 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.2.0] - 2026-09-07
 
+First installable release. On `0.x` the public API may still move between
+minors; see the Public API section in the README for what is covered once 1.0
+lands.
+
 ### Changed
 
 - **Laravel 13 only.** `0.1.0` claimed `^12.0|^13.0` while being built on queue
@@ -25,10 +29,13 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
   The matrix now runs the tests, across PHP 8.3/8.4/8.5 including a
   `--prefer-lowest` pass.
 
-## [0.1.0] - 2026-09-07
+## [0.1.0] - 2026-09-07 — withdrawn
 
-First tagged release. On `0.x` the public API may still move between minors;
-see the Public API section in the README for what is covered once 1.0 lands.
+Tagged and then removed the same day, before anyone depended on it: it declared
+support for Laravel 12 while calling queue APIs that only exist in 13, so it
+fataled there. The tag is gone from GitHub and Packagist. Everything below
+shipped in `0.2.0` instead; it is kept here because the entries describe what
+the package does, not just what changed.
 
 ### Added
 
