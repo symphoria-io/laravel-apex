@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/symphoria-io/laravel-apex/security/advisories/new
+    about: Never report these publicly. This opens a private report to the maintainers.
+  - name: Question or idea
+    url: https://github.com/symphoria-io/laravel-apex/discussions
+    about: For anything that is not a confirmed bug or a concrete proposal.

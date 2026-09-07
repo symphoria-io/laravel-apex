@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest something the package should do
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: The problem
+      description: What are you trying to do that Apex makes hard or impossible? Describe the situation, not the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: What you have in mind
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: What you tried instead
+      description: Configuration, a custom `QueueSuspensionSource`, wrapping a command — whatever did not work, and why.
+
+  - type: checkboxes
+    id: cost
+    attributes:
+      label: Cost in the master loop
+      description: >
+        The master's per-tick reads dominate the cost of an idle installation.
+        Anything that adds a read or write per queue, per worker or per dispatch
+        needs a batched design.
+      options:
+        - label: This adds no unbatched per-queue, per-worker or per-dispatch work, or I have described how to batch it.

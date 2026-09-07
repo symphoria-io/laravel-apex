@@ -1,0 +1,53 @@
+name: Bug report
+description: Something behaves differently than documented
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Scaling decisions depend on depth, activity and throttle state at that
+        moment, so a decision that looks wrong on its own usually is not.
+        The config dump below is what makes a report diagnosable.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: And what you expected instead.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: How to reproduce
+      placeholder: |
+        1. Configure queue X with ...
+        2. Dispatch N jobs
+        3. Apex spawns ... instead of ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: config
+    attributes:
+      label: Output of `php artisan apex:config:show`
+      description: Redact whatever you need to. The store, probe and interval provenance are the useful part.
+      render: shell
+    validations:
+      required: true
+
+  - type: input
+    id: versions
+    attributes:
+      label: Versions
+      placeholder: "apex 0.1.0, Laravel 13.29, PHP 8.4, queue driver redis, APEX_STORE derived"
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: From the `apex` log channel, or `apex:start -v`.
+      render: shell

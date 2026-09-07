@@ -1,0 +1,811 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$string of method Illuminate\\Console\\Command\:\:line\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Console/Commands/ApexConfigShowCommand.php
+
+		-
+			message: '#^Call to function is_array\(\) with array\<string, string\> will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Console/Commands/ApexStartCommand.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Illuminate\\Console\\View\\Components\\Factory\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: src/Console/Commands/ApexStartCommand.php
+
+		-
+			message: '#^Parameter \#1 \$string of method Illuminate\\Console\\Command\:\:line\(\) expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Console/Commands/ApexStatusCommand.php
+
+		-
+			message: '#^While loop condition is always true\.$#'
+			identifier: while.alwaysTrue
+			count: 1
+			path: src/Console/Commands/ApexStatusCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\ApexTailCommand\:\:printJob\(\) has parameter \$job with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/ApexTailCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\ApexTailCommand\:\:printStart\(\) has parameter \$entry with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/ApexTailCommand.php
+
+		-
+			message: '#^While loop condition is always true\.$#'
+			identifier: while.alwaysTrue
+			count: 1
+			path: src/Console/Commands/ApexTailCommand.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Console/Commands/ApexWorkCommand.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Illuminate\\Contracts\\Queue\\Job and ''getJobId'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Console/Commands/ApexWorkCommand.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Illuminate\\Contracts\\Queue\\Job and ''uuid'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 2
+			path: src/Console/Commands/ApexWorkCommand.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 4
+			path: src/Console/Commands/ApexWorkCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\Bench\\BenchRunCommand\:\:parseOptions\(\) has parameter \$pairs with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/Bench/BenchRunCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\Bench\\BenchRunCommand\:\:parseOptions\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/Bench/BenchRunCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\Bench\\BenchRunCommand\:\:resolveModes\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/Bench/BenchRunCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\Bench\\BenchRunCommand\:\:resolveScenarioNames\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/Bench/BenchRunCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Console\\Commands\\Bench\\BenchRunCommand\:\:systemInfo\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Console/Commands/Bench/BenchRunCommand.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Events\\ApexTestBroadcast\:\:broadcastWith\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Events/ApexTestBroadcast.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexFailedJobsController\:\:flush\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexFailedJobsController\:\:forget\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexFailedJobsController\:\:list\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexFailedJobsController\:\:loadAll\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexFailedJobsController\:\:retry\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexFailedJobsController\:\:retryAll\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between Illuminate\\Queue\\Failed\\DatabaseUuidFailedJobProvider and null will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Http/Controllers/ApexFailedJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexRecentJobsController\:\:list\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexRecentJobsController.php
+
+		-
+			message: '#^Parameter \#1 \$queue of method Symphoria\\Apex\\Ipc\\MetricsStore\:\:recentJobsMerged\(\) expects string\|null, array\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/ApexRecentJobsController.php
+
+		-
+			message: '#^Parameter \#2 \$status of method Symphoria\\Apex\\Ipc\\MetricsStore\:\:recentJobsMerged\(\) expects string\|null, array\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/ApexRecentJobsController.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Http\\Controllers\\ApexWorkerEventsController\:\:list\(\) has no return type specified\.$#'
+			identifier: missingType.return
+			count: 1
+			path: src/Http/Controllers/ApexWorkerEventsController.php
+
+		-
+			message: '#^Parameter \#1 \$queue of method Symphoria\\Apex\\Ipc\\MetricsStore\:\:workerEvents\(\) expects string\|null, array\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/ApexWorkerEventsController.php
+
+		-
+			message: '#^Parameter \#2 \$type of method Symphoria\\Apex\\Ipc\\MetricsStore\:\:workerEvents\(\) expects string\|null, array\|string\|null given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Http/Controllers/ApexWorkerEventsController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$avg_depth\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$avg_oldest_wait_sec\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$avg_runtime_ms\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$avg_workers\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$bucket_at\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$failed_count\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$max_depth\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$max_oldest_wait_sec\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$max_runtime_ms\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$max_workers\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$processed_count\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Access to an undefined property Symphoria\\Apex\\Models\\QueueMetricsHistory\:\:\$sample_count\.$#'
+			identifier: property.notFound
+			count: 2
+			path: src/Http/Controllers/Api/ApexHistoryController.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Ipc/Depth/RedisQueueDepthReader.php
+
+		-
+			message: '#^Method Redis\:\:pipeline\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 3
+			path: src/Ipc/Depth/RedisQueueDepthReader.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Ipc\\HeartbeatStore\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Ipc/HeartbeatStore.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Ipc\\HeartbeatStore\:\:read\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Ipc/HeartbeatStore.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Ipc\\HeartbeatStore\:\:write\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Ipc/HeartbeatStore.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Ipc\\MetricsStore\:\:jobSortTimestamp\(\) has parameter \$job with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Ipc/MetricsStore.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Ipc\\MetricsStore\:\:readSnapshot\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Ipc/MetricsStore.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Ipc\\MetricsStore\:\:writeSnapshot\(\) has parameter \$snapshot with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Ipc/MetricsStore.php
+
+		-
+			message: '#^Method Redis\:\:pipeline\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 2
+			path: src/Ipc/Stores/RedisStore.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\BootThrottle\:\:expireStuckBoots\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/BootThrottle.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Master\\BootThrottle\:\:\$bootingPids type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/BootThrottle.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Master\:\:processBurstPass\(\) has parameter \$candidates with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Master\:\:recordEvent\(\) has parameter \$extra with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Master\:\:scaleQueue\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Master\:\:scaleQueue\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Master\:\:spawnWorker\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Offset ''processed_last…'' on array\{name\: \(int\|string\), profile\: mixed, queues\: mixed, depth\: int, oldest_wait_seconds\: int\|null, processed_last_minute\: int, processed_total\: int, current_processes\: int, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Offset ''processed_total'' on array\{name\: \(int\|string\), profile\: mixed, queues\: mixed, depth\: int, oldest_wait_seconds\: int\|null, processed_last_minute\: int, processed_total\: int, current_processes\: int, \.\.\.\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Master\\Master\:\:\$lastCpuSample type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Master.php
+
+		-
+			message: '#^Offset ''depth'' on array\{depth\: array\<int\>, oldest\: array\<int\>, workers\: array\<int\>\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Master/MetricsAggregator.php
+
+		-
+			message: '#^Offset ''oldest'' on array\{depth\: array\<int\>, oldest\: array\<int\>, workers\: array\<int\>\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Master/MetricsAggregator.php
+
+		-
+			message: '#^Offset ''workers'' on array\{depth\: array\<int\>, oldest\: array\<int\>, workers\: array\<int\>\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Master/MetricsAggregator.php
+
+		-
+			message: '#^Parameter \#1 \.\.\.\$arg1 of function max expects non\-empty\-array, array\<int\> given\.$#'
+			identifier: argument.type
+			count: 2
+			path: src/Master/MetricsAggregator.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Master\\MetricsAggregator\:\:\$buffer \(array\<string, array\{depth\: array\<int\>, oldest\: array\<int\>, workers\: array\<int\>\}\>\) does not accept non\-empty\-array\<string, array\{depth\: array\<int\>, oldest\: array\<int\>, workers\?\: array\<int\>\}\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Master/MetricsAggregator.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Profiles\\DepthStrategy\:\:demand\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Profiles/DepthStrategy.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Profiles\\HybridStrategy\:\:demand\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Profiles/HybridStrategy.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\Profiles\\WaitStrategy\:\:demand\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/Profiles/WaitStrategy.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\ScalingDecider\:\:decide\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/ScalingDecider.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\ScalingStrategy\:\:demand\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/ScalingStrategy.php
+
+		-
+			message: '#^Call to function is_string\(\) with string will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Cannot access offset 0 on list\<string\>\|false\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\SystemLoad\:\:sample\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Offset 0 on array\{float, float, float\} in isset\(\) always exists and is not nullable\.$#'
+			identifier: isset.offset
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_shift expects array, list\<string\>\|false given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Master\\SystemLoad\:\:\$cachedSample type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Master\\SystemLoad\:\:\$lastCpuStat type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Strict comparison using \=\=\= between array\{float, float, float\} and false will always evaluate to false\.$#'
+			identifier: identical.alwaysFalse
+			count: 1
+			path: src/Master/SystemLoad.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\WorkerRegistry\:\:all\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/WorkerRegistry.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Master\\WorkerRegistry\:\:forQueue\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/WorkerRegistry.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Master\\WorkerRegistry\:\:\$workers type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Master/WorkerRegistry.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Models\\QueueState\:\:pausedBy\(\) return type with generic class Illuminate\\Database\\Eloquent\\Relations\\MorphTo does not specify its types\: TRelatedModel, TDeclaringModel$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Models/QueueState.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Process\\ProcessFactory\:\:buildWorkerArgs\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Process\\ProcessFactory\:\:buildWorkerArgs\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Process\\ProcessFactory\:\:spawnWorker\(\) has parameter \$queueConfig with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Offset ''pid'' on array\{command\: string, pid\: int, running\: bool, signaled\: bool, stopped\: bool, exitcode\: int, termsig\: int, stopsig\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 1
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Offset ''running'' on array\{command\: string, pid\: int, running\: bool, signaled\: bool, stopped\: bool, exitcode\: int, termsig\: int, stopsig\: int\} on left side of \?\? always exists and is not nullable\.$#'
+			identifier: nullCoalesce.offset
+			count: 2
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Parameter \#1 \$command of function proc_open expects list\<string\>\|string, non\-empty\-array\|non\-falsy\-string given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Strict comparison using \!\=\= between non\-falsy\-string and '''' will always evaluate to true\.$#'
+			identifier: notIdentical.alwaysTrue
+			count: 1
+			path: src/Process/ProcessFactory.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Providers/ApexServiceProvider.php
+
+		-
+			message: '#^Cannot call method flushSharedContext\(\) on class\-string\|object\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Providers/ApexServiceProvider.php
+
+		-
+			message: '#^Cannot call method getConnections\(\) on class\-string\|object\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Providers/ApexServiceProvider.php
+
+		-
+			message: '#^Cannot call method withoutContext\(\) on class\-string\|object\.$#'
+			identifier: method.nonObject
+			count: 1
+			path: src/Providers/ApexServiceProvider.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Providers\\ApexServiceProvider\:\:buildResetScope\(\) has parameter \$app with no type specified\.$#'
+			identifier: missingType.parameter
+			count: 1
+			path: src/Providers/ApexServiceProvider.php
+
+		-
+			message: '#^Ternary operator condition is always true\.$#'
+			identifier: ternary.alwaysTrue
+			count: 1
+			path: src/Providers/ApexServiceProvider.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Queue\\ApexRedisConnector\:\:connect\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Queue/ApexRedisConnector.php
+
+		-
+			message: '#^Call to function method_exists\(\) with Redis and ''blmpop'' will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: src/Queue/ApexRedisQueue.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Queue\\ApexRedisQueue\:\:execBlmpop\(\) has parameter \$keys with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Queue/ApexRedisQueue.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Queue\\ApexRedisQueue\:\:execBlmpop\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Queue/ApexRedisQueue.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchContext\:\:__construct\(\) has parameter \$options with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchContext.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchResult\:\:summary\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchResult.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchResult\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchResult.php
+
+		-
+			message: '#^Parameter \#1 \$values of static method Symphoria\\Apex\\Services\\Bench\\Support\\PercentileCalculator\:\:summarize\(\) expects array\<int, float\|int\>, array\<int\<0, max\>, float\|null\> given\.$#'
+			identifier: argument.type
+			count: 3
+			path: src/Services/Bench/BenchResult.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchResultRecorder\:\:await\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchResultRecorder.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchResultRecorder\:\:merge\(\) has parameter \$patch with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchResultRecorder.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchResultRecorder\:\:read\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchResultRecorder.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchResultRecorder\:\:recordFinish\(\) has parameter \$extra with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchResultRecorder.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchSample\:\:__construct\(\) has parameter \$extra with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchSample.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\BenchSample\:\:toArray\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/BenchSample.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\ResultReporter\:\:format\(\) has parameter \$summary with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/ResultReporter.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\ResultReporter\:\:toJson\(\) has parameter \$systemInfo with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/ResultReporter.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\ResultReporter\:\:toJson\(\) should return string but returns string\|false\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Services/Bench/ResultReporter.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\ResultReporter\:\:value\(\) has parameter \$summary with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/ResultReporter.php
+
+		-
+			message: '#^Possibly invalid array key type string\|null\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/Services/Bench/ResultReporter.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\ScenarioRegistry\:\:names\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/ScenarioRegistry.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Services\\Bench\\ScenarioRegistry\:\:\$scenarios \(array\<string, class\-string\<Symphoria\\Apex\\Services\\Bench\\Scenarios\\BenchScenario\>\>\) does not accept array\<string, string\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Services/Bench/ScenarioRegistry.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\Scenarios\\AbstractPollScenario\:\:buildSample\(\) has parameter \$extra with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/Scenarios/AbstractPollScenario.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\Scenarios\\AbstractPollScenario\:\:buildSample\(\) has parameter \$pollResult with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/Scenarios/AbstractPollScenario.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Services\\Bench\\Scenarios\\NoOpScenario\:\:runMs\(\) has parameter \$payload with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Services/Bench/Scenarios/NoOpScenario.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Services\\Bench\\WorkerModeManager\:\:\$apexConfig is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Services/Bench/WorkerModeManager.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Services\\Bench\\WorkerModeManager\:\:\$heartbeats is never read, only written\.$#'
+			identifier: property.onlyWritten
+			count: 1
+			path: src/Services/Bench/WorkerModeManager.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:__construct\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:activity\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:allQueues\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:burst\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:flexQueues\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:master\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:queue\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:queueNames\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:recentJobs\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Method Symphoria\\Apex\\Support\\ApexConfig\:\:workerEvents\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php
+
+		-
+			message: '#^Property Symphoria\\Apex\\Support\\ApexConfig\:\:\$config type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/Support/ApexConfig.php

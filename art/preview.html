@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Laravel Apex / Brand assets</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f7f8f6; color: #19201d; font-family: system-ui, sans-serif; }
+    header, main, footer { width: min(1120px, 100%); margin: auto; padding: 24px 32px; }
+    header, footer { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; }
+    header { padding-top: 32px; }
+    header a, footer a { color: inherit; text-underline-offset: 4px; }
+    main { padding-top: 8px; }
+    .banner { width: 100%; height: auto; display: block; }
+    .samples { display: grid; grid-template-columns: 1fr 1fr; margin-top: 40px; border-block: 1px solid #d5dbd5; }
+    .sample { padding: 32px; min-width: 0; }
+    .sample.dark { background: #073e30; color: white; }
+    .sample > a { color: inherit; font-family: ui-monospace, monospace; font-size: 12px; text-underline-offset: 4px; }
+    .sizes { display: flex; align-items: end; gap: 24px; flex-wrap: wrap; min-height: 156px; padding-block: 24px; }
+    figure { margin: 0; text-align: center; }
+    figure img { width: var(--size); height: var(--size); display: block; }
+    figcaption { font: 11px ui-monospace, monospace; margin-top: 16px; opacity: .7; }
+    footer { color: #69736c; }
+    @media (max-width: 600px) {
+      header, main, footer { padding-inline: 16px; }
+      .samples { grid-template-columns: 1fr; margin-top: 24px; }
+      .sample { padding: 24px; }
+      header, footer { flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+  <header><span>SYMPHORIA / LARAVEL APEX</span><a href="banner.svg">Banner SVG</a></header>
+  <main>
+    <img class="banner" src="banner.svg" width="1600" height="360" alt="Laravel Apex. Queue workers that scale to match the work. By Symphoria.">
+    <div class="samples">
+      <section class="sample" aria-label="Green logo on light background">
+        <a href="logo.svg">logo.svg</a>
+        <div class="sizes">
+          <figure style="--size: 96px"><img src="logo.svg" alt="Apex green logo"><figcaption>96</figcaption></figure>
+          <figure style="--size: 48px"><img src="logo.svg" alt="Apex green logo"><figcaption>48</figcaption></figure>
+          <figure style="--size: 32px"><img src="logo.svg" alt="Apex green logo"><figcaption>32</figcaption></figure>
+          <figure style="--size: 16px"><img src="logo.svg" alt="Apex green logo"><figcaption>16</figcaption></figure>
+        </div>
+      </section>
+      <section class="sample dark" aria-label="White logo on dark background">
+        <a href="logo-white.svg">logo-white.svg</a>
+        <div class="sizes">
+          <figure style="--size: 96px"><img src="logo-white.svg" alt="Apex white logo"><figcaption>96</figcaption></figure>
+          <figure style="--size: 48px"><img src="logo-white.svg" alt="Apex white logo"><figcaption>48</figcaption></figure>
+          <figure style="--size: 32px"><img src="logo-white.svg" alt="Apex white logo"><figcaption>32</figcaption></figure>
+          <figure style="--size: 16px"><img src="logo-white.svg" alt="Apex white logo"><figcaption>16</figcaption></figure>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer><span>Surge / Green &amp; white</span><a href="../README.md">README</a></footer>
+</body>
+</html>

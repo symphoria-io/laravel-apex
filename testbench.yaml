@@ -1,0 +1,21 @@
+providers:
+  - Symphoria\Apex\Providers\ApexServiceProvider
+
+migrations: true
+
+seeders: false
+
+workbench:
+  start: '/'
+  install: true
+  health: false
+  discovers:
+    web: false
+    api: false
+    commands: true
+    components: false
+    views: false
+  build:
+    - create-sqlite-db
+    - db-wipe
+    - migrate-refresh

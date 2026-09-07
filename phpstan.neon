@@ -1,0 +1,19 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+    # 172 findings inherited from the WPS module this package was extracted
+    # from, which was never analysed at level 8. The baseline stops new ones
+    # from slipping in; burning it down is tracked in ACCEPTANCE.md.
+    - phpstan-baseline.neon
+
+parameters:
+    level: 8
+    paths:
+        - src
+        - database
+    tmpDir: build/phpstan
+    # config/ is deliberately excluded: larastan resolves the config directory
+    # against the host app, so it flags this package's own config file for
+    # calling env(). tests/Feature/ConfigTest.php covers that rule accurately.
+    # checkModelProperties needs a live database, which a package with a
+    # configurable table name cannot provide. Enable it in the app instead.
+    noEnvCallsOutsideOfConfig: true

@@ -1,0 +1,29 @@
+; Supervisord program for a single Apex master daemon.
+; One master per Laravel install. The master itself spawns and supervises
+; workers; supervisord only needs to keep the master alive.
+;
+; Place this in /etc/supervisor/conf.d/apex-{system-slug}.conf and
+; run: supervisorctl reread && supervisorctl update
+
+[program:apex-{system-slug}]
+process_name=%(program_name)s
+command=php /var/www/{system-slug}/current/artisan apex:start
+autostart=true
+autorestart=true
+user=www-data
+numprocs=1
+redirect_stderr=true
+stdout_logfile=/var/log/supervisor/apex-{system-slug}.log
+stdout_logfile_maxbytes=10MB
+stdout_logfile_backups=3
+stopwaitsecs=15
+stopsignal=TERM
+
+; Notes:
+; - stopwaitsecs MUST be >= apex.master.graceful_shutdown_seconds so the
+;   master has time to drain workers before supervisord SIGKILLs it.
+; - Do NOT run multiple instances per system. The control-channel and
+;   heartbeat keys assume a single master per Laravel install. If you
+;   need horizontal scale, give each system its own apex.* Redis prefix.
+; - Memory: master ~80MB, each worker ~100-150MB while running. With
+;   min_processes: 0 on most queues, idle footprint = master only.

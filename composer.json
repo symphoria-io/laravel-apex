@@ -1,0 +1,89 @@
+{
+    "name": "symphoria/laravel-apex",
+    "description": "Queue worker supervisor with scale-to-zero, activity-aware warm pools and boot-storm prevention.",
+    "license": "MIT",
+    "type": "library",
+    "keywords": ["laravel", "queue", "supervisor", "workers", "symphoria"],
+    "authors": [
+        {
+            "name": "Symphoria B.V.",
+            "homepage": "https://symphoria.io"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "ext-json": "*",
+        "illuminate/console": "^12.0|^13.0",
+        "illuminate/contracts": "^12.0|^13.0",
+        "illuminate/database": "^12.0|^13.0",
+        "illuminate/events": "^12.0|^13.0",
+        "illuminate/http": "^12.0|^13.0",
+        "illuminate/queue": "^12.0|^13.0",
+        "illuminate/redis": "^12.0|^13.0",
+        "illuminate/routing": "^12.0|^13.0",
+        "illuminate/support": "^12.0|^13.0"
+    },
+    "require-dev": {
+        "larastan/larastan": "^3.0",
+        "laravel/pint": "^1.18",
+        "orchestra/testbench": "^10.0|^11.0",
+        "pestphp/pest": "^3.0|^4.0",
+        "pestphp/pest-plugin-arch": "^3.0|^4.0",
+        "pestphp/pest-plugin-laravel": "^3.0|^4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symphoria\\Apex\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symphoria\\Apex\\Tests\\": "tests/",
+            "Workbench\\App\\": "workbench/app/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["Symphoria\\Apex\\Providers\\ApexServiceProvider"]
+        },
+        "symphoria": {
+            "summary": "Queue supervisor with scaling policy, warm pools and a JSON control API.",
+            "use-when": [
+                "several queues with uneven load",
+                "workers must be able to scale down to zero",
+                "you need warm workers only while people are actually using the app"
+            ],
+            "avoid-when": [
+                "one queue with few jobs, where plain queue:work is enough",
+                "Laravel Cloud managed queues, which supervise for you"
+            ],
+            "not-included": [
+                "the queue backend itself; that stays Laravel",
+                "the dashboard screen; the package ships the JSON API, you own the UI"
+            ]
+        }
+    },
+    "scripts": {
+        "analyse": "phpstan analyse",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "lint": "pint",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "test": "pest",
+        "post-autoload-dump": ["@clear", "@prepare"]
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "phpstan/extension-installer": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}
