@@ -68,6 +68,8 @@ zero depth forever. `apex:start` warns about forwards; routes to another
 
 ## Deliberate deviations
 
+**Laravel 13.26 and up, against the family rule of supporting two majors.** Apex is built on queue APIs that do not exist in 12 and land across the 13.x line: `Worker::getPausedQueues()`, `raisePausedQueueEvents()` and the `queue.routes` binding behind `Queue::forward()` are all present from 13.26. Picking that floor is what lets the code call them outright — a lower floor means `method_exists` guards on the pop path, and a feature that silently does nothing is worse than one that is honestly not supported. Widening back is a minor whenever it is wanted; narrowing would have been a major.
+
 **PHPStan has a baseline of 159 findings.** They are inherited from the WPS module, which was never analysed at level 8. The baseline stops new ones from slipping in. Burning it down is a prerequisite for 1.0 and is tracked in `ACCEPTANCE.md`. Treat an entry as a possible unreported bug rather than noise: the baseline was suppressing a call to a `Worker::queuePaused()` that does not exist, which made every BLMPOP pop fatal, and five more entries turned out to be describing methods nothing called.
 
 **No `file` store, and there will not be one.** It means writing your own locking, which fails differently on Windows and silently on network shares. SQLite through `APEX_DB_CONNECTION` is the "one file, no daemon" answer.

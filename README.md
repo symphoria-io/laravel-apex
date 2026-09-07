@@ -210,7 +210,7 @@ What you give up: the dashboard (Apex ships JSON and no screen), and first-party
 
 ## Requirements
 
-PHP 8.3+, Laravel 12 or 13, and a queue on the `redis` or `database` driver. Redis 7+ additionally enables `BLMPOP` pickup. See [Running without Redis](#running-without-redis).
+PHP 8.3+, Laravel 13.26+, and a queue on the `redis` or `database` driver. Redis 7+ additionally enables `BLMPOP` pickup. See [Running without Redis](#running-without-redis).
 
 ## Development
 

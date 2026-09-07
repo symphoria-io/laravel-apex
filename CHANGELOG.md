@@ -6,6 +6,25 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-07
+
+### Changed
+
+- **Laravel 13 only.** `0.1.0` claimed `^12.0|^13.0` while being built on queue
+  APIs that only exist in 13: `Worker::getPausedQueues()` and the
+  `queue.routes` binding behind `Queue::forward()`. On Laravel 12 the BLMPOP
+  pop path called a method that is not there, so every pop fataled — the
+  matrix never caught it because formatting and static analysis failed first
+  and the test step never ran. The floor is `^13.26`, the release where the
+  whole pause API and `Queue::forward()` are present, so nothing has to be
+  guarded or silently degraded.
+- CI splits quality from compatibility. Formatting and static analysis run once
+  on the newest PHP, because they describe the code rather than the dependency
+  graph: `prefer-lowest` installs an older Pint that formats differently, and a
+  PHPStan baseline only matches the framework version it was generated with.
+  The matrix now runs the tests, across PHP 8.3/8.4/8.5 including a
+  `--prefer-lowest` pass.
+
 ## [0.1.0] - 2026-09-07
 
 First tagged release. On `0.x` the public API may still move between minors;

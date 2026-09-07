@@ -12,8 +12,9 @@ use Symphoria\Apex\Contracts\QueueSuspensionSource;
  * `Queue::pauseAll()` scale Apex workers down to zero instead of leaving idle
  * workers alive.
  *
- * Not the default binding: `getPausedQueues()` arrived in Laravel 13.25 and
- * this package supports Laravel 12 as well. Bind it explicitly:
+ * Not the default binding, and deliberately so: whether an operator pausing a
+ * queue should also scale its workers to zero is a policy question, not a
+ * technical one. Bind it explicitly when that is what you want:
  *
  *     $this->app->bind(QueueSuspensionSource::class, LaravelPauseSuspensionSource::class);
  */

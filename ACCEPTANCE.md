@@ -41,8 +41,8 @@ composer lint && composer analyse && composer test && composer validate --strict
 ```
 
 - [x] All four pass. 147 tests, 309 assertions.
-- [ ] CI runs the matrix across PHP 8.3/8.4 and Laravel 12/13.
-- [ ] CI includes a `--prefer-lowest` run.
+- [ ] CI runs the test matrix across PHP 8.3/8.4/8.5, including a `--prefer-lowest` pass.
+- [ ] Formatting and static analysis run once, on the newest PHP.
 - [ ] `composer audit` reports nothing.
 
 ## Known debt, must clear before 1.0

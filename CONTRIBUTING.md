@@ -42,9 +42,10 @@ composer analyse   # PHPStan level 8
 composer lint      # Pint
 ```
 
-All three have to pass. CI runs them across PHP 8.3–8.5 and Laravel 12–13, with
+All three have to pass. CI runs the tests across PHP 8.3–8.5, with
 `--prefer-lowest` as well, which is what catches a version constraint that is
-too loose.
+too loose. Formatting and static analysis run once, on the newest PHP: they are
+properties of the code, not of the dependency graph.
 
 To try a change against a real application, use the playground in the
 [symphoria-packages](https://github.com/symphoria-io) working directory, or point any
