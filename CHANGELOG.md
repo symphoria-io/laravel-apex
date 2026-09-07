@@ -6,6 +6,11 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-09-07
+
+First tagged release. On `0.x` the public API may still move between minors;
+see the Public API section in the README for what is covered once 1.0 lands.
+
 ### Added
 
 - Extracted from the WPS `Apex` module: master daemon, scaling decider with
