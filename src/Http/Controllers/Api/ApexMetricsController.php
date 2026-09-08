@@ -2,11 +2,12 @@
 
 namespace Symphoria\Apex\Http\Controllers\Api;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symphoria\Apex\Apex;
 use Symphoria\Apex\Ipc\ControlChannel;
 use Symphoria\Apex\Ipc\MetricsStore;
-use Symphoria\Apex\Models\QueueState;
 use Symphoria\Apex\Support\ApexConfig;
 
 class ApexMetricsController
@@ -43,11 +44,17 @@ class ApexMetricsController
         $reason = $request->input('reason');
         $reason = is_string($reason) ? trim($reason) : null;
 
-        QueueState::updateOrCreate(
+        // Only an Eloquent user can be stored in the morph; any other
+        // Authenticatable pauses the queue without being recorded.
+        $actor = $request->user();
+        $actor = $actor instanceof Model ? $actor : null;
+
+        Apex::queueStateModel()::query()->updateOrCreate(
             ['queue_name' => $queue],
             [
                 'is_paused_manually' => true,
-                'paused_by_admin_id' => $request->user()?->getAuthIdentifier(),
+                'paused_by_type' => $actor?->getMorphClass(),
+                'paused_by_id' => $actor?->getKey(),
                 'paused_at' => now(),
                 'pause_reason' => $reason !== '' ? $reason : null,
             ],
@@ -73,9 +80,10 @@ class ApexMetricsController
             ], 422);
         }
 
-        QueueState::where('queue_name', $queue)->update([
+        Apex::queueStateModel()::query()->where('queue_name', $queue)->update([
             'is_paused_manually' => false,
-            'paused_by_admin_id' => null,
+            'paused_by_type' => null,
+            'paused_by_id' => null,
             'paused_at' => null,
             'pause_reason' => null,
         ]);

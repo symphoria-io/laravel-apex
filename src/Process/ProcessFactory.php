@@ -11,10 +11,16 @@ class ProcessFactory
 
     private string $artisanPath;
 
-    public function __construct(?string $phpBinary = null, ?string $artisanPath = null)
+    private string $workingDirectory;
+
+    public function __construct(?string $phpBinary = null, ?string $artisanPath = null, ?string $workingDirectory = null)
     {
         $this->phpBinary = $phpBinary ?? $this->detectPhpBinary();
         $this->artisanPath = $artisanPath ?? base_path('artisan');
+        // Spawning resolves the application relative to this, so it has to be
+        // the root that owns `artisan` — which is not base_path() when the
+        // package runs inside a test skeleton.
+        $this->workingDirectory = $workingDirectory ?? base_path();
     }
 
     public function spawnWorker(string $apexId, string $queueName, array $queueConfig, bool $burst = false, bool $floor = false): WorkerHandle
@@ -65,7 +71,7 @@ class ProcessFactory
             $this->isWindows() ? $cmd : implode(' ', array_map('escapeshellarg', $cmd)),
             $descriptors,
             $pipes,
-            base_path(),
+            $this->workingDirectory,
             null,
             $this->isWindows() ? ['bypass_shell' => true] : null,
         );

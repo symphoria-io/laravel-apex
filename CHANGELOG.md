@@ -6,6 +6,37 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Fixed
+
+- **Resuming a queue from the control API returned a 500.** Both `pause` and
+  `resume` wrote a `paused_by_admin_id` column that no migration creates — the
+  table records who paused a queue polymorphically, as `paused_by_type` /
+  `paused_by_id`, because the package cannot know the host's user model. On
+  `pause` the column was silently dropped by mass-assignment protection, so the
+  actor was never stored; on `resume` the query-builder update went straight to
+  SQL and failed with `no such column`. Both now write the morph pair, taken
+  from `getMorphClass()` and `getKey()` so a registered morph alias is honoured.
+  An `Authenticatable` that is not an Eloquent model still pauses the queue, but
+  is not recorded.
+- The control endpoints resolve the queue state through `Apex::queueStateModel()`
+  instead of referencing the packaged model directly, so an
+  `apex.models.queue_state` override is no longer ignored.
+
+### Added
+
+- An end-to-end test that spawns a real `apex:work` subprocess and watches it
+  boot, report a heartbeat and drain a database queue. `apex:work` extends
+  Laravel's `WorkCommand`, so a signature change upstream makes it exit before
+  any package code runs; nothing caught that before.
+- Coverage for the pause and resume endpoints, which had no HTTP-level test at
+  all. That is how the column mismatch above reached a release.
+
+### Changed
+
+- The test suite pins the cache store to `array`. Laravel keeps queue pause
+  state in the cache and defaults to the `database` store, whose table
+  Testbench does not create, which broke five tests on Laravel 13.30.
+
 ## [0.2.0] - 2026-09-07
 
 First installable release. On `0.x` the public API may still move between

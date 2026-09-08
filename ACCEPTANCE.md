@@ -49,7 +49,7 @@ composer lint && composer analyse && composer test && composer validate --strict
 
 - [ ] **`phpstan-baseline.neon` holds 159 inherited findings.** Burn down to zero; do not add to it. One entry turned out to be a fatal bug and five more described dead code, so treat the rest as unreviewed.
 - [x] The master loop has a test: `MasterLoopTest` covers a failing snapshot, the shutdown check staying reachable, the kill escalation and cleanup on an escaping throw.
-- [ ] No test drives a real worker process end to end. `WorkerPoolTest` exercises the pop and pause decisions against a stand-in connection; nothing spawns an actual `apex:work` and watches it pick up a job.
+- [x] A test drives a real worker process end to end. `RealWorkerTest` spawns an actual `apex:work`, waits for its heartbeat and watches it drain a database queue, then confirms it exits on its own once the queue stays empty. `WorkerPoolTest` still covers the pop and pause decisions against a stand-in connection.
 - [ ] The database store has not been measured under load. It is correct, not benchmarked: the per-store tick defaults are reasoned, not derived from numbers.
 - [ ] `UPGRADE.md` has no entries yet because nothing has shipped.
 - [ ] The WPS side still needs its bridge: a `QueueSuspensionSource` reading `modules.is_enabled`, its own `config/apex.php` with `wps_apex__*` table names, and the four bench scenarios re-registered.

@@ -49,20 +49,28 @@ abstract class TestCase extends Orchestra
         // The control API runs through the `web` group, which needs an
         // encrypter for the session cookie.
         $app['config']->set('app.key', 'base64:'.base64_encode(random_bytes(32)));
+        // Laravel keeps queue pause state in the cache, and the default store
+        // is `database` — a table Testbench never creates.
+        $app['config']->set('cache.default', 'array');
     }
 
     /**
      * Laravel's own jobs table, spelled out rather than pulled from whichever
      * stub the installed version ships, so the schema Apex reads is fixed by
      * this package's tests rather than by the framework release under test.
+     *
+     * Takes a connection because the end-to-end test needs it on a database
+     * that lives on disk, where a worker subprocess can also reach it.
      */
-    protected function createJobsTable(string $table = 'jobs'): void
+    protected function createJobsTable(string $table = 'jobs', ?string $connection = null): void
     {
-        if (Schema::hasTable($table)) {
+        $schema = Schema::connection($connection);
+
+        if ($schema->hasTable($table)) {
             return;
         }
 
-        Schema::create($table, function (Blueprint $blueprint): void {
+        $schema->create($table, function (Blueprint $blueprint): void {
             $blueprint->id();
             $blueprint->string('queue')->index();
             $blueprint->longText('payload');
