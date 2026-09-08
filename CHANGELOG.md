@@ -6,6 +6,8 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.1] - 2026-09-08
+
 ### Fixed
 
 - **Resuming a queue from the control API returned a 500.** Both `pause` and
