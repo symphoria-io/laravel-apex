@@ -24,6 +24,10 @@ final class MasterLock
 
     private float $lastRefreshAt = 0.0;
 
+    private int $reacquisitions = 0;
+
+    private float $lastLapseSeconds = 0.0;
+
     public function __construct(
         private readonly ApexConfig $config,
         private readonly ApexStore $store,
@@ -49,31 +53,71 @@ final class MasterLock
     }
 
     /**
-     * Extend the lease, and notice if it was lost. A master whose lock lapsed
-     * while another one started must stand down rather than quietly carry on
-     * scaling the same queues.
+     * Extend the lease, and notice if it was lost.
+     *
+     * Two very different things make the stored value differ from ours. Another
+     * master may have taken over (a forced start on deploy, or a replacement
+     * after this process looked dead): then we stand down, because two masters
+     * scaling the same queues is a broken installation. Or the key simply
+     * expired because this loop did not turn for longer than the TTL — a host
+     * under memory pressure can stall any process for half a minute — and
+     * nobody claimed it in the meantime. Standing down there would kill every
+     * worker for no reason and leave the queues unstaffed until a supervisor
+     * notices; instead the lease is claimed again, atomically, and reported so
+     * the stall is visible.
      */
-    public function refresh(): void
+    public function refresh(): LockRefresh
     {
         if ($this->token === null) {
-            return;
+            return LockRefresh::NotHeld;
         }
 
         $ttl = $this->ttlSeconds();
+        $now = microtime(true);
+        $sinceLast = $now - $this->lastRefreshAt;
 
-        if ((microtime(true) - $this->lastRefreshAt) < $ttl / 3) {
-            return;
+        if ($sinceLast < $ttl / 3) {
+            return LockRefresh::Skipped;
         }
 
-        $this->lastRefreshAt = microtime(true);
+        $this->lastRefreshAt = $now;
+        $current = $this->store->get($this->key());
 
-        if ($this->store->get($this->key()) !== $this->token) {
-            $this->token = null;
+        if ($current === $this->token) {
+            $this->store->put($this->key(), $this->token, $ttl);
 
-            return;
+            return LockRefresh::Held;
         }
 
-        $this->store->put($this->key(), $this->token, $ttl);
+        // add() is atomic (SET NX / unique index), so two masters that both see
+        // an expired key cannot both come out of this holding it.
+        if (($current === null || $current === '') && $this->store->add($this->key(), $this->token, $ttl)) {
+            $this->reacquisitions++;
+            $this->lastLapseSeconds = $sinceLast;
+
+            return LockRefresh::Reacquired;
+        }
+
+        $this->token = null;
+
+        return LockRefresh::Lost;
+    }
+
+    /** How often the lease lapsed and was claimed again by this same process. */
+    public function reacquisitions(): int
+    {
+        return $this->reacquisitions;
+    }
+
+    /** Seconds between the previous renewal and the one that found the key gone. */
+    public function lastLapseSeconds(): float
+    {
+        return $this->lastLapseSeconds;
+    }
+
+    public function ttlSeconds(): int
+    {
+        return max(5, (int) ($this->config->master()['lock_ttl_seconds'] ?? 30));
     }
 
     public function heldByThisProcess(): bool
@@ -132,11 +176,6 @@ final class MasterLock
             // crash. The nonce is what makes the token identify this process.
             'nonce' => bin2hex(random_bytes(8)),
         ]);
-    }
-
-    private function ttlSeconds(): int
-    {
-        return max(5, (int) ($this->config->master()['lock_ttl_seconds'] ?? 30));
     }
 
     private function key(): string

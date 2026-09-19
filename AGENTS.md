@@ -42,7 +42,7 @@ class, so a queue Apex watches can quietly stop receiving work while reporting
 zero depth forever. `apex:start` warns about forwards; routes to another
 *connection* are invisible to the probe and remain the host's responsibility.
 
-**One master per installation, enforced by a lease.** `MasterLock` holds `apex:master:lock` for `lock_ttl_seconds` and renews it every tick; losing it means another master took over and this one stands down. Two masters is not a degraded mode: neither can see the other's workers, so both scale the same queues and spawn past every maximum, and it reads as erratic scaling rather than as a second process. The lease has to expire on its own, because nothing releases it when a master is killed outright.
+**One master per installation, enforced by a lease.** `MasterLock` holds `apex:master:lock` for `lock_ttl_seconds` and renews it every tick. Two masters is not a degraded mode: neither can see the other's workers, so both scale the same queues and spawn past every maximum, and it reads as erratic scaling rather than as a second process. The lease has to expire on its own, because nothing releases it when a master is killed outright. But an expired key is not proof of a rival: a host under memory pressure can stop the master for longer than the TTL, and standing down there kills every worker for nobody. `refresh()` therefore re-acquires an expired key atomically and reports `LockRefresh::Reacquired`; only a key holding a *different* token (`LockRefresh::Lost`) makes the master stand down.
 
 **Reporting may fail; supervising may not.** Everything the loop does after `tick()` is wrapped, because a store that cannot answer must not take down the process that owns the workers. The shutdown check gets its own guard rather than sharing one with the snapshot: if a failing snapshot could skip it, the control channel would stop being able to stop the master. `shutdown()` runs in a `finally`, and kills whatever outlives the grace period, because `proc_close()` waits for the process and otherwise bounds nothing.
 
@@ -56,7 +56,7 @@ zero depth forever. `apex:start` warns about forwards; routes to another
 
 **`ApexWorkCommand` cannot rely on container auto-wiring.** `Worker::__construct` takes a `callable $isDownForMaintenance` the container cannot resolve, so the provider constructs it explicitly with `queue.worker` + `cache.store`.
 
-**One owner per worker's death.** A worker that can time itself out owns that decision; the master only retires workers that cannot. Floor workers get `--idle-timeout=0` and therefore must be master-retired when the effective minimum drops.
+**One owner per worker's death.** A worker that can time itself out owns that decision; the master only retires workers that cannot. Floor workers get `--idle-timeout=0` and therefore must be master-retired when the effective minimum drops — and only then. On an idle surplus `signalQueueShrink` keeps `desiredBaseline` floor workers alive and leaves the standby to time out; picking "the oldest idle worker" instead killed the warm floor and left the queue empty once the standby expired.
 
 **Scale up immediately, scale down only after `scale_down_debounce_seconds`.** Flex coverage dips for a second whenever a flex worker recycles, and reacting to that dip is what produced a spawn/kill oscillation.
 

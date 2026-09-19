@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 use Symphoria\Apex\Apex;
 use Symphoria\Apex\Contracts\ApexStore;
+use Symphoria\Apex\Ipc\LockRefresh;
 use Symphoria\Apex\Ipc\MasterLock;
 use Symphoria\Apex\Ipc\Stores\DatabaseStore;
 use Symphoria\Apex\Ipc\Stores\RedisStore;
@@ -141,9 +142,50 @@ it('stands down when its lease was taken over', function (string $driver) {
 
     // Past ttl/3, so the refresh actually goes and looks.
     (new ReflectionProperty($original, 'lastRefreshAt'))->setValue($original, microtime(true) - 60);
-    $original->refresh();
 
-    expect($original->heldByThisProcess())->toBeFalse();
+    expect($original->refresh())->toBe(LockRefresh::Lost)
+        ->and($original->heldByThisProcess())->toBeFalse();
+})->with('lock stores');
+
+it('claims a lapsed lease again when nobody else took it', function (string $driver) {
+    // A host under memory pressure can stop a process for longer than the TTL.
+    // That is a stalled loop, not a rival master; standing down there killed
+    // every worker and left the queues unstaffed for minutes.
+    $store = lockStore($driver);
+
+    if ($store === null) {
+        $this->markTestSkipped('no redis server available');
+    }
+
+    $lock = makeLock($store);
+    $lock->acquire();
+
+    $store->forget(config('apex.store_keys.master_lock'));
+    (new ReflectionProperty($lock, 'lastRefreshAt'))->setValue($lock, microtime(true) - 60);
+
+    expect($lock->refresh())->toBe(LockRefresh::Reacquired)
+        ->and($lock->heldByThisProcess())->toBeTrue()
+        ->and($lock->reacquisitions())->toBe(1)
+        ->and($lock->lastLapseSeconds())->toBeGreaterThan(50.0)
+        ->and(makeLock($store)->acquire())->toBeFalse();
+})->with('lock stores');
+
+it('renews its own lease quietly', function (string $driver) {
+    $store = lockStore($driver);
+
+    if ($store === null) {
+        $this->markTestSkipped('no redis server available');
+    }
+
+    $lock = makeLock($store);
+    $lock->acquire();
+
+    expect($lock->refresh())->toBe(LockRefresh::Skipped);
+
+    (new ReflectionProperty($lock, 'lastRefreshAt'))->setValue($lock, microtime(true) - 60);
+
+    expect($lock->refresh())->toBe(LockRefresh::Held)
+        ->and($lock->reacquisitions())->toBe(0);
 })->with('lock stores');
 
 it('does not delete a lock that already belongs to its replacement', function (string $driver) {

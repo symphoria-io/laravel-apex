@@ -200,6 +200,87 @@ it('stands down and cleans up when another master takes the lock', function () {
         ->and($processes->terminated)->toContain(7);
 });
 
+it('carries on when its lease lapsed and nobody took it', function () {
+    // The loop was stopped for longer than the TTL (a host under memory
+    // pressure does that), the key expired, and no replacement started.
+    // Treating that as a takeover killed every worker for a rival that did
+    // not exist, and left the queues unstaffed until a supervisor noticed.
+    config()->set('apex.master.lock_ttl_seconds', 5);
+
+    $lock = new MasterLock(ApexConfig::fromConfig(), app(ApexStore::class));
+    $lock->acquire();
+
+    app(ApexStore::class)->forget(config('apex.store_keys.master_lock'));
+    (new ReflectionProperty($lock, 'lastRefreshAt'))->setValue($lock, microtime(true) - 10);
+
+    $control = new SelfStoppingControlChannel(ApexConfig::fromConfig(), app(ApexStore::class), app(WakeSignal::class));
+
+    $master = makeMaster(new SpyProcessFactory, new WorkerRegistry, app(MetricsStore::class), $control, null, $lock);
+    $master->run();
+
+    // Two control reads means the loop went round twice: it did not stand
+    // down on the refresh that found the key gone.
+    expect($control->calls)->toBe(2)
+        ->and($lock->reacquisitions())->toBe(1);
+});
+
+it('lets a standby retire itself instead of killing the warm floor worker', function () {
+    // One floor worker (idle-timeout 0) plus one standby (idle-timeout 60) on a
+    // queue that now wants one: oldest-first used to pick the floor worker,
+    // the standby then timed out, and the next job paid a cold boot.
+    config()->set('apex.queues', ['chat' => ['queues' => ['chat'], 'min_processes' => 1, 'max_processes' => 3]]);
+    config()->set('apex.master.scale_down_debounce_seconds', 0);
+    config()->set('apex.master.shrink_min_lifetime_seconds', 0);
+
+    $registry = new WorkerRegistry;
+    $registry->add(new WorkerHandle(pid: 11, queueName: 'chat', apexId: 'floor', startedAt: microtime(true) - 120, process: fopen('php://memory', 'r'), isFloor: true));
+    $registry->add(new WorkerHandle(pid: 12, queueName: 'chat', apexId: 'standby', startedAt: microtime(true) - 100, process: fopen('php://memory', 'r')));
+
+    $heartbeats = app(HeartbeatStore::class);
+    $heartbeats->write('floor', ['queue' => 'chat', 'state' => 'waiting'], force: true);
+    $heartbeats->write('standby', ['queue' => 'chat', 'state' => 'waiting'], force: true);
+
+    $metrics = app(MetricsStore::class);
+
+    makeMaster(
+        new SpyProcessFactory,
+        $registry,
+        $metrics,
+        new SelfStoppingControlChannel(ApexConfig::fromConfig(), app(ApexStore::class), app(WakeSignal::class)),
+    )->run();
+
+    expect($metrics->workerEvents('chat', 'shrink_signalled'))->toBe([]);
+});
+
+it('retires the surplus floor worker when the floor itself shrinks', function () {
+    // Two floor workers left over from an active period, one wanted now: the
+    // master is the only thing that can stop a floor worker, so it must.
+    config()->set('apex.queues', ['chat' => ['queues' => ['chat'], 'min_processes' => 1, 'max_processes' => 3]]);
+    config()->set('apex.master.scale_down_debounce_seconds', 0);
+    config()->set('apex.master.shrink_min_lifetime_seconds', 0);
+
+    $registry = new WorkerRegistry;
+    $registry->add(new WorkerHandle(pid: 21, queueName: 'chat', apexId: 'floor-old', startedAt: microtime(true) - 120, process: fopen('php://memory', 'r'), isFloor: true));
+    $registry->add(new WorkerHandle(pid: 22, queueName: 'chat', apexId: 'floor-new', startedAt: microtime(true) - 100, process: fopen('php://memory', 'r'), isFloor: true));
+
+    $heartbeats = app(HeartbeatStore::class);
+    $heartbeats->write('floor-old', ['queue' => 'chat', 'state' => 'waiting'], force: true);
+    $heartbeats->write('floor-new', ['queue' => 'chat', 'state' => 'waiting'], force: true);
+
+    $metrics = app(MetricsStore::class);
+
+    makeMaster(
+        new SpyProcessFactory,
+        $registry,
+        $metrics,
+        new SelfStoppingControlChannel(ApexConfig::fromConfig(), app(ApexStore::class), app(WakeSignal::class)),
+    )->run();
+
+    $signalled = array_map(fn (array $event) => $event['pid'], $metrics->workerEvents('chat', 'shrink_signalled'));
+
+    expect($signalled)->toBe([21]);
+});
+
 /**
  * Never asks for shutdown, so only losing the lock can end the loop.
  */

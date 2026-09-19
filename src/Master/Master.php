@@ -9,6 +9,7 @@ use Symphoria\Apex\Contracts\QueueSuspensionSource;
 use Symphoria\Apex\Ipc\ActivityTracker;
 use Symphoria\Apex\Ipc\ControlChannel;
 use Symphoria\Apex\Ipc\HeartbeatStore;
+use Symphoria\Apex\Ipc\LockRefresh;
 use Symphoria\Apex\Ipc\MasterLock;
 use Symphoria\Apex\Ipc\MetricsStore;
 use Symphoria\Apex\Ipc\WakeSignal;
@@ -116,9 +117,21 @@ class Master
         $snapshotIntervalSeconds = (int) ($master['metrics_snapshot_interval_seconds'] ?? 1);
         $idleSnapshotIntervalSeconds = max($snapshotIntervalSeconds, (int) ($master['idle_snapshot_interval_seconds'] ?? 5));
         $lastSnapshotAt = 0;
+        $previousIterationAt = microtime(true);
+        $stallThreshold = max(5.0, ($this->lock?->ttlSeconds() ?? 30) / 2);
 
         while ($this->running) {
             $tickStart = microtime(true);
+
+            // A loop that did not turn for this long was not slow, it was
+            // stopped: the host paged the process out or starved it of CPU.
+            // Nothing below can fix that, but it explains what follows
+            // (lapsed lock, missed heartbeats) and belongs in the log.
+            $gap = $tickStart - $previousIterationAt;
+            if ($gap >= $stallThreshold) {
+                $this->log('warning', sprintf('Master loop stalled for %.1fs (host under pressure?)', $gap));
+                $this->recordEvent('master_stalled', '*', ['seconds' => round($gap, 1)]);
+            }
 
             try {
                 $this->tick();
@@ -159,10 +172,25 @@ class Master
             }
 
             try {
-                $this->lock?->refresh();
+                $outcome = $this->lock?->refresh();
 
-                if ($this->lock !== null && ! $this->lock->heldByThisProcess()) {
-                    $this->log('error', 'Lost the master lock; another master has taken over. Standing down.');
+                if ($outcome === LockRefresh::Reacquired) {
+                    // The key expired while this loop was not turning, and no
+                    // replacement claimed it. Standing down here used to kill
+                    // every worker for a rival that did not exist.
+                    $this->log('warning', sprintf(
+                        'Master lock lapsed (no renewal for %.1fs, TTL %ds) but nobody took it; re-acquired and carrying on',
+                        $this->lock->lastLapseSeconds(),
+                        $this->lock->ttlSeconds(),
+                    ));
+                    $this->recordEvent('master_lock_reacquired', '*', ['lapse_seconds' => round($this->lock->lastLapseSeconds(), 1)]);
+                } elseif ($this->lock !== null && ! $this->lock->heldByThisProcess()) {
+                    $holder = $this->lock->holder();
+                    $this->log('error', sprintf(
+                        'Lost the master lock; another master (host=%s pid=%d) has taken over. Standing down.',
+                        $holder['host'] ?? 'unknown',
+                        $holder['pid'] ?? 0,
+                    ));
                     $this->running = false;
                 }
             } catch (\Throwable $e) {
@@ -179,6 +207,8 @@ class Master
             if (! ($elapsedUs > $intervalUs)) {
                 usleep($intervalUs - $elapsedUs);
             }
+
+            $previousIterationAt = microtime(true);
         }
     }
 
@@ -521,6 +551,7 @@ class Master
                     $baselineCurrent - $decision->desiredBaseline,
                     $depth,
                     'over_baseline',
+                    $decision->desiredBaseline,
                 );
             }
         } else {
@@ -708,7 +739,11 @@ class Master
         $this->recordEvent($burst ? 'burst_spawned' : 'spawned', $queueName, $extra);
     }
 
-    private function signalQueueShrink(string $queueName, int $excess, int $depth = 0, string $reason = 'over_max'): void
+    /**
+     * @param  int  $keepFloor  on an idle surplus, how many floor workers the queue still wants; the
+     *                          rest of the surplus is made of standby workers that retire themselves
+     */
+    private function signalQueueShrink(string $queueName, int $excess, int $depth = 0, string $reason = 'over_max', int $keepFloor = 0): void
     {
         $workers = $this->registry->forQueue($queueName);
 
@@ -723,21 +758,40 @@ class Master
         $minLifetime = (float) ($this->config->master()['shrink_min_lifetime_seconds'] ?? 45);
         $enforceMinLifetime = ! in_array($reason, ['paused', 'over_max', 'shutdown'], true);
 
-        for ($i = 0; $i < min($excess, count($workers)); $i++) {
-            $worker = $workers[$i];
+        // Floor workers not already winding down. The floor the decider still
+        // wants must survive an idle surplus: the standby that caused the
+        // surplus times itself out, and retiring the warm floor instead left
+        // the queue with nothing once it did — the next job paid a cold boot.
+        $floorRemaining = count(array_filter(
+            $workers,
+            fn (WorkerHandle $w) => $w->isFloor && ! isset($this->shrinkSignalledAt[$w->pid]),
+        ));
+
+        $signalled = 0;
+
+        foreach ($workers as $worker) {
+            if ($signalled >= $excess) {
+                break;
+            }
 
             if ($enforceMinLifetime && ($now - $worker->startedAt) < $minLifetime) {
                 continue;
             }
 
-            // Exactly one component may retire a given worker, or the two
-            // race each other. A worker that can time itself out owns that
-            // decision; the master only steps in for workers that cannot
-            // (floor workers, spawned with --idle-timeout=0). This applies
-            // when the queue is simply idle — a real surplus (flex coverage
-            // arriving while work is still queued) is still handled below.
-            if ($reason === 'over_baseline' && $depth === 0 && ! $worker->isFloor) {
-                continue;
+            if ($reason === 'over_baseline') {
+                // Exactly one component may retire a given worker, or the two
+                // race each other. A worker that can time itself out owns that
+                // decision; the master only steps in for workers that cannot
+                // (floor workers, spawned with --idle-timeout=0). This applies
+                // when the queue is simply idle — a real surplus (flex coverage
+                // arriving while work is still queued) is still handled below.
+                if ($depth === 0 && ! $worker->isFloor) {
+                    continue;
+                }
+
+                if ($worker->isFloor && $floorRemaining <= $keepFloor) {
+                    continue;
+                }
             }
 
             $hb = $this->heartbeatCache[$worker->apexId] ?? $this->heartbeats->read($worker->apexId);
@@ -755,6 +809,10 @@ class Master
 
             $this->processFactory->terminate($worker);
             $this->shrinkSignalledAt[$worker->pid] = $now;
+            $signalled++;
+            if ($worker->isFloor) {
+                $floorRemaining--;
+            }
             $this->log('info', "Signalled idle worker pid={$worker->pid} queue={$queueName} to stop");
             $this->recordEvent('shrink_signalled', $queueName, [
                 'pid' => $worker->pid,
