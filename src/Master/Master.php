@@ -128,6 +128,7 @@ class Master
             // Nothing below can fix that, but it explains what follows
             // (lapsed lock, missed heartbeats) and belongs in the log.
             $gap = $tickStart - $previousIterationAt;
+            $previousIterationAt = $tickStart;
             if ($gap >= $stallThreshold) {
                 $this->log('warning', sprintf('Master loop stalled for %.1fs (host under pressure?)', $gap));
                 $this->recordEvent('master_stalled', '*', ['seconds' => round($gap, 1)]);
@@ -208,7 +209,6 @@ class Master
                 usleep($intervalUs - $elapsedUs);
             }
 
-            $previousIterationAt = microtime(true);
         }
     }
 

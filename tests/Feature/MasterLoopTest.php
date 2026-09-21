@@ -161,6 +161,30 @@ it('shuts its workers down even when the loop throws', function () {
     expect($processes->terminated)->toContain(99);
 });
 
+it('records a stall across the complete previous iteration', function () {
+    config()->set('apex.master.lock_ttl_seconds', 5);
+    config()->set('apex.master.tick_interval_ms', 5100);
+    config()->set('apex.master.idle_tick_interval_ms', 5100);
+
+    $lock = new MasterLock(ApexConfig::fromConfig(), app(ApexStore::class));
+    $lock->acquire();
+    $metrics = app(MetricsStore::class);
+
+    makeMaster(
+        new SpyProcessFactory,
+        new WorkerRegistry,
+        $metrics,
+        new SelfStoppingControlChannel(ApexConfig::fromConfig(), app(ApexStore::class), app(WakeSignal::class)),
+        null,
+        $lock,
+    )->run();
+
+    $events = $metrics->workerEvents('*', 'master_stalled');
+
+    expect($events)->toHaveCount(1)
+        ->and($events[0]['seconds'])->toBeGreaterThanOrEqual(5.0);
+});
+
 it('stands down and cleans up when another master takes the lock', function () {
     // Carrying on here means two supervisors scaling the same queues, neither
     // able to see the other's workers.
