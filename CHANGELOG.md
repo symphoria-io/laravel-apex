@@ -6,6 +6,42 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+## [0.2.2] - 2026-09-21
+
+### Fixed
+
+- **A stalled master no longer kills its own workers.** When the host paged the
+  master out for longer than `lock_ttl_seconds` (observed: 30–45 s under memory
+  pressure), the lease expired, the next refresh found the key gone and the
+  master concluded that "another master has taken over". It stood down and
+  SIGTERMed every worker, so the queues went unstaffed until a supervisor
+  started a replacement — three minutes, on the installation that reported it.
+  `MasterLock::refresh()` now returns a `LockRefresh` outcome: an expired key
+  that nobody else claimed is re-acquired atomically (`SET NX` / unique index)
+  and logged as a lapse; only a key that holds a *different* token means a
+  takeover, and only that makes the master stand down. The stand-down message
+  names the new holder.
+- **An idle surplus no longer retires the warm floor worker.** With
+  `standby_when_active`, a queue that just finished a job holds one floor
+  worker (`--idle-timeout=0`) and one standby (`idle_timeout_seconds`). The
+  shrink pass walked the oldest `excess` workers and only ever considered the
+  first `excess` positions, so it stopped the floor worker — the standby was
+  skipped because it times itself out, and did, leaving the queue empty and the
+  next job paying a full framework boot. The pass now counts *signalled*
+  workers rather than positions, and on an idle surplus keeps as many floor
+  workers as the decider still wants (`desiredBaseline`); the rest of the
+  surplus is left to retire itself.
+
+### Added
+
+- The master logs `Master loop stalled for Ns` and records a `master_stalled`
+  worker event whenever an iteration starts more than `max(5, ttl/2)` seconds
+  after the previous one ended. A lapsed-and-reacquired lease records
+  `master_lock_reacquired`. Both make a host problem legible from the queue
+  side.
+- `MasterLock::reacquisitions()`, `lastLapseSeconds()` and a public
+  `ttlSeconds()`.
+
 ## [0.2.1] - 2026-09-08
 
 ### Fixed
