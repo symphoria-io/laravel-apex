@@ -4,6 +4,21 @@ Write this file as instructions, not as a changelog. It is read by a model migra
 
 Nothing has shipped yet, so there is nothing to upgrade from.
 
+## Worker OPcache is off by default
+
+`apex.worker.opcache.enabled` now defaults to `false`, so workers no longer get
+`-d opcache.*` flags. To keep the old behaviour, set it explicitly:
+
+```dotenv
+APEX_WORKER_OPCACHE_ENABLED=true
+```
+
+A published `config/apex.php` keeps whatever default it was published with;
+change `env('APEX_WORKER_OPCACHE_ENABLED', true)` to `false` there to follow
+the new default. After switching off, the directory
+`storage/framework/cache/opcache-workers` (or `APEX_WORKER_OPCACHE_FILE_CACHE`)
+is no longer used and can be deleted.
+
 ## If you published `config/apex.php` before the master lock landed
 
 Two keys were added. Neither is required — the code falls back — but adding

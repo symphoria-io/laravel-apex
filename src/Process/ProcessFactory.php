@@ -205,18 +205,15 @@ class ProcessFactory
     }
 
     /**
-     * Build `-d ...` PHP CLI flags injected into every spawned worker. Used to
-     * force OPcache on (PHP CLI defaults to opcache.enable_cli=0) so workers
-     * don't re-compile every framework file on every boot. -d flags override
-     * php.ini per-process; if opcache is already enabled globally the flags
-     * are harmless duplicates. Disable by setting APEX_WORKER_OPCACHE_ENABLED=false.
+     * Build `-d ...` PHP CLI flags that force OPcache on in spawned workers.
+     * Opt-in via APEX_WORKER_OPCACHE_ENABLED=true; see config/apex.php for why.
      *
      * @return string[]
      */
     private function buildPhpFlags(): array
     {
         $cfg = (array) config('apex.worker.opcache', []);
-        if (! ($cfg['enabled'] ?? true)) {
+        if (! ($cfg['enabled'] ?? false)) {
             return [];
         }
 

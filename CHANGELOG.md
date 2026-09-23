@@ -6,6 +6,16 @@ adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+### Changed
+
+- **Worker OPcache is now off by default.** `apex.worker.opcache.enabled`
+  (`APEX_WORKER_OPCACHE_ENABLED`) defaults to `false`. Measured on a Laravel
+  app it saved ~170 ms per worker boot and nothing after that, while each
+  worker paid a private shared-memory segment (net ~30–45 MB), and the
+  on-disk file cache with `validate_timestamps=0` let freshly spawned workers
+  run stale code or a stale `config:cache` after a deploy. Set the variable to
+  `true` to restore the previous behaviour.
+
 ## [0.2.2] - 2026-09-21
 
 ### Fixed

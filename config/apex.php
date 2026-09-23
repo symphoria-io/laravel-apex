@@ -206,17 +206,18 @@ return [
     | Worker process options
     |--------------------------------------------------------------------------
     |
-    | OPcache for CLI is OFF by default in PHP. Each Apex worker boots a fresh
-    | Laravel app, so without OPcache every framework file is re-parsed on each
-    | spawn — costing ~30-50MB and 200-500ms per worker. Apex injects -d flags
-    | into the spawned PHP process to enable OPcache regardless of the host
-    | php.ini. Safe to leave on; if global opcache.enable_cli is already set,
-    | the flags are redundant overrides (no conflict).
+    | Worker OPcache is off by default. A worker compiles each file once in its
+    | lifetime, so OPcache only shortens boot (~170ms measured on a Laravel
+    | app). CLI OPcache is not shared between processes: each worker pays its
+    | own shared-memory segment, a net ~30-45MB more than without. The file
+    | cache also survives restarts, and with validate_timestamps=0 a fresh
+    | worker can run stale code or a stale config:cache after a deploy.
+    | Enable only when workers spawn often enough for boot time to matter.
     |
     */
     'worker' => [
         'opcache' => [
-            'enabled' => filter_var(env('APEX_WORKER_OPCACHE_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            'enabled' => filter_var(env('APEX_WORKER_OPCACHE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
             'memory_consumption' => (int) env('APEX_WORKER_OPCACHE_MEMORY_MB', 128),
             'max_accelerated_files' => (int) env('APEX_WORKER_OPCACHE_MAX_FILES', 20000),
             // Persist compiled bytecode to disk so worker N+1 reads parsed
